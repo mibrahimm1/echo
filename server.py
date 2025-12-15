@@ -1,5 +1,4 @@
 import os
-import headers
 import uuid
 import json
 from fastapi import FastAPI, UploadFile, File, HTTPException, Form

@@ -4,4 +4,3 @@ python-multipart
 groq
 python-dotenv
 requests
-headers
