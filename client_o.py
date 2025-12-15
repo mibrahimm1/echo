@@ -6,7 +6,7 @@ import os
 import uuid
 import asyncio
 import edge_tts
-from pydub import AudioSegment
+import subprocess
 from vad_helper import VadGenerator
 
 # Configuration
@@ -18,7 +18,7 @@ CHUNK_SIZE = int(RATE * FRAME_DURATION_MS / 1000)
 
 INPUT_DEVICE_INDEX = 1 # Match your USB Device ID
 SESSION_ID = str(uuid.uuid4())
-SERVER_URL = os.getenv("SERVER_URL", "https://your-new-optimized-server.onrender.com/interact")
+SERVER_URL = os.getenv("SERVER_URL", "https://echo-ut7s.onrender.com/interact")
 
 print(f"Session ID: {SESSION_ID}")
 
@@ -29,29 +29,14 @@ async def generate_tts(text, output_file):
     await communicate.save(output_file)
 
 def play_audio_file(filename):
-    """Plays audio file (converts MP3 to WAV for PyAudio)"""
+    """Plays audio file using mpg123 (installed on system)"""
     try:
-        # Load MP3/Other and convert to WAV in memory or temp file
-        # PyAudio needs WAV 
-        sound = AudioSegment.from_file(filename)
-        
-        # Ensure correct rate for Pi
-        if sound.frame_rate != RATE:
-            sound = sound.set_frame_rate(RATE)
-            
-        p = pyaudio.PyAudio()
-        stream = p.open(format=p.get_format_from_width(sound.sample_width),
-                        channels=sound.channels,
-                        rate=sound.frame_rate,
-                        output=True,
-                        output_device_index=INPUT_DEVICE_INDEX)
-        
-        stream.write(sound.raw_data)
-        stream.stop_stream()
-        stream.close()
-        p.terminate()
+        # Use mpg123 for robust command-line playback
+        # -q: quiet mode
+        subprocess.run(["mpg123", "-q", filename])
     except Exception as e:
         print(f"Playback error: {e}")
+        print("Ensure mpg123 is installed: sudo apt install mpg123")
 
 def main():
     if os.path.exists("welcome.wav"):
