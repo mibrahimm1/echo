@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.venv/
+venv/
+env/
+
+# Environment Variables
+.env
+
+# Audio Artifacts (Temporary files)
+*.wav
+*.mp3
+# Keep the test input if desired, but ignore generated outputs
+!test_input.wav
+test_output.wav
+response_*.wav
+temp_*.wav
+temp_*.mp3
+
+# IDE
+.vscode/
+.idea/
